@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🆘 SOS – Aiuta questo bambino</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #E63946;
+      --red-dk: #B5202C;
+      --bg:     #0D0D0D;
+      --card:   #1A1A1A;
+      --white:  #F5F5F5;
+      --muted:  #888;
+      --green:  #2DC653;
+      --yellow: #F4C430;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+
+    /* ── Header ── */
+    .sos-badge {
+      background: var(--red);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 8vw, 44px);
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    h1 span { color: var(--red); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* ── Status card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 16px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--yellow);
+      flex-shrink: 0;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .dot.ok  { background: var(--green); animation: none; }
+    .dot.err { background: var(--red);   animation: none; }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+
+    .status-label {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .coords {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      background: #111;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:active { opacity: .85; transform: scale(.98); }
+    .btn:disabled { opacity: .35; pointer-events: none; }
+
+    .btn-call {
+      background: var(--red);
+      color: #fff;
+      font-size: 19px;
+    }
+    .btn-wa {
+      background: #25D366;
+      color: #fff;
+    }
+    .btn-sms {
+      background: #2A2A2A;
+      color: var(--white);
+      border: 1px solid #3a3a3a;
+    }
+    .btn-maps {
+      background: #1A73E8;
+      color: #fff;
+    }
+
+    .icon { font-size: 22px; line-height: 1; }
+
+    /* ── Footer note ── */
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      max-width: 340px;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* ── Error panel ── */
+    #panel-error { display: none; }
+    #panel-ok    { display: none; }
+    #panel-wait  { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="sos-badge">⚠️ SOS EMERGENZA</div>
+
+  <h1>Questo bambino<br>ha bisogno di <span>aiuto</span></h1>
+  <p class="subtitle">Per favore, contatta subito il genitore</p>
+
+  <!-- STATUS CARD -->
+  <div class="card">
+    <!-- WAITING -->
+    <div id="panel-wait">
+      <div class="status-row">
+        <div class="dot" id="dot"></div>
+        <span class="status-label" id="status-label">Ricerca posizione GPS…</span>
+      </div>
+      <div class="coords" id="coords"></div>
+    </div>
+  </div>
+
+  <!-- BUTTONS (sempre visibili, si attivano quando GPS pronto) -->
+  <a class="btn btn-call" id="btn-call" href="tel:+39XXXXXXXXXX">
+    <span class="icon">📞</span> Chiama genitore 1
+  </a>
+
+  <a class="btn btn-call" id="btn-call2" href="tel:+39YYYYYYYYYY" style="background:#B5202C;">
+    <span class="icon">📞</span> Chiama genitore 2
+  </a>
+
+  <a class="btn btn-wa" id="btn-wa" href="#" disabled>
+    <span class="icon">💬</span> WhatsApp genitore 1
+  </a>
+
+  <a class="btn btn-wa" id="btn-wa2" href="#" disabled style="background:#1DA851;">
+    <span class="icon">💬</span> WhatsApp genitore 2
+  </a>
+
+  <a class="btn btn-sms" id="btn-sms" href="#" disabled>
+    <span class="icon">✉️</span> SMS genitore 1
+  </a>
+
+  <a class="btn btn-sms" id="btn-sms2" href="#" disabled style="border-color:#555;">
+    <span class="icon">✉️</span> SMS genitore 2
+  </a>
+
+  <a class="btn btn-maps" id="btn-maps" href="#" target="_blank" disabled>
+    <span class="icon">📍</span> Apri posizione su Maps
+  </a>
+
+  <p class="note">
+    Questa pagina è collegata allo zaino/indumento di un bambino.<br>
+    La posizione GPS non viene salvata né condivisa con terzi.
+  </p>
+
+<script>
+  // ╔══════════════════════════════════════════╗
+  // ║  CONFIGURA QUI I TUOI DATI               ║
+  // ╚══════════════════════════════════════════╝
+  const NUMERO_GENITORE   = "+393469440430";   // es. +393331234567  (mamma/papà 1)
+  const WHATSAPP_NUMERO   = "393469440430";    // stesso senza +
+  const NUMERO_GENITORE2  = "+393493766793";   // es. +393337654321  (mamma/papà 2)
+  const WHATSAPP_NUMERO2  = "393493766793";    // stesso senza +
+  const NOME_BAMBINO      = "Cecilia";            // nome tua figlia
+
+  // ────────────────────────────────────────────
+  const elDot    = document.getElementById("dot");
+  const elLabel  = document.getElementById("status-label");
+  const elCoords = document.getElementById("coords");
+  const btnWa    = document.getElementById("btn-wa");
+  const btnWa2   = document.getElementById("btn-wa2");
+  const btnSms   = document.getElementById("btn-sms");
+  const btnSms2  = document.getElementById("btn-sms2");
+  const btnMaps  = document.getElementById("btn-maps");
+  const btnCall  = document.getElementById("btn-call");
+  const btnCall2 = document.getElementById("btn-call2");
+
+  // Chiamate sempre disponibili
+  btnCall.href  = `tel:${NUMERO_GENITORE}`;
+  btnCall2.href = `tel:${NUMERO_GENITORE2}`;
+
+  function setError(msg) {
+    elDot.className     = "dot err";
+    elLabel.textContent = msg;
+    const msgNoGps = encodeURIComponent(
+      `🆘 SOS! Ho trovato ${NOME_BAMBINO} ma non riesco a ottenere la posizione GPS. Chiama subito!`
+    );
+    btnWa.href   = `https://wa.me/${WHATSAPP_NUMERO}?text=${msgNoGps}`;
+    btnWa2.href  = `https://wa.me/${WHATSAPP_NUMERO2}?text=${msgNoGps}`;
+    btnSms.href  = `sms:${NUMERO_GENITORE}?body=${msgNoGps}`;
+    btnSms2.href = `sms:${NUMERO_GENITORE2}?body=${msgNoGps}`;
+    btnWa.removeAttribute("disabled");
+    btnWa2.removeAttribute("disabled");
+    btnSms.removeAttribute("disabled");
+    btnSms2.removeAttribute("disabled");
+  }
+
+  function setOk(lat, lon) {
+    elDot.className     = "dot ok";
+    elLabel.textContent = "Posizione trovata ✓";
+    elCoords.style.display = "block";
+    elCoords.textContent   = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+
+    const mapsUrl = `https://maps.google.com/?q=${lat},${lon}`;
+    const msg = encodeURIComponent(
+      `🆘 SOS! Ho trovato ${NOME_BAMBINO}. È qui: ${mapsUrl}`
+    );
+
+    btnWa.href   = `https://wa.me/${WHATSAPP_NUMERO}?text=${msg}`;
+    btnWa2.href  = `https://wa.me/${WHATSAPP_NUMERO2}?text=${msg}`;
+    btnSms.href  = `sms:${NUMERO_GENITORE}?body=${msg}`;
+    btnSms2.href = `sms:${NUMERO_GENITORE2}?body=${msg}`;
+    btnMaps.href = mapsUrl;
+
+    btnWa.removeAttribute("disabled");
+    btnWa2.removeAttribute("disabled");
+    btnSms.removeAttribute("disabled");
+    btnSms2.removeAttribute("disabled");
+    btnMaps.removeAttribute("disabled");
+
+    // Auto-apri WhatsApp genitore 1 dopo 1.5s
+    setTimeout(() => { window.location.href = btnWa.href; }, 1500);
+  }
+
+  // Richiedi GPS
+  if (!navigator.geolocation) {
+    setError("GPS non supportato su questo dispositivo");
+  } else {
+    navigator.geolocation.getCurrentPosition(
+      pos => setOk(pos.coords.latitude, pos.coords.longitude),
+      err => {
+        const msgs = {
+          1: "Permesso GPS negato – usa i pulsanti sotto",
+          2: "Posizione non disponibile",
+          3: "Timeout GPS – usa i pulsanti sotto"
+        };
+        setError(msgs[err.code] || "Errore GPS");
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  }
+</script>
+</body>
+</html>
