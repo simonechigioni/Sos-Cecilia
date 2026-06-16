@@ -6,7 +6,6 @@
   <title>SOS - Aiuta questo bambino</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --red:    #E63946;
       --red-dk: #B5202C;
@@ -17,7 +16,6 @@
       --green:  #2DC653;
       --yellow: #F4C430;
     }
-
     body {
       background: var(--bg);
       color: var(--white);
@@ -28,7 +26,6 @@
       align-items: center;
       padding: 24px 16px 40px;
     }
-
     .sos-badge {
       background: var(--red);
       color: #fff;
@@ -40,7 +37,6 @@
       border-radius: 999px;
       margin-bottom: 20px;
     }
-
     h1 {
       font-size: clamp(28px, 8vw, 44px);
       font-weight: 800;
@@ -48,16 +44,13 @@
       line-height: 1.15;
       margin-bottom: 8px;
     }
-
     h1 span { color: var(--red); }
-
     .subtitle {
       color: var(--muted);
       font-size: 15px;
       text-align: center;
       margin-bottom: 32px;
     }
-
     .card {
       background: var(--card);
       border: 1px solid #2a2a2a;
@@ -67,14 +60,12 @@
       max-width: 420px;
       margin-bottom: 16px;
     }
-
     .status-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
-
     .dot {
       width: 12px; height: 12px;
       border-radius: 50%;
@@ -84,14 +75,8 @@
     }
     .dot.ok  { background: var(--green); animation: none; }
     .dot.err { background: var(--red);   animation: none; }
-
-    @keyframes pulse {
-      0%,100% { opacity: 1; }
-      50%      { opacity: 0.3; }
-    }
-
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .status-label { font-size: 15px; font-weight: 600; }
-
     .coords {
       font-family: 'Courier New', monospace;
       font-size: 12px;
@@ -99,11 +84,47 @@
       background: #111;
       padding: 8px 12px;
       border-radius: 8px;
-      margin-top: 4px;
+      margin-top: 6px;
       display: none;
     }
 
-    /* Separatore gruppo */
+    /* Conto alla rovescia */
+    .countdown-bar {
+      display: none;
+      margin-top: 12px;
+      background: #111;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 6px;
+    }
+    .countdown-bar-fill {
+      height: 100%;
+      background: #25D366;
+      width: 100%;
+      transition: width 1s linear;
+    }
+    .countdown-text {
+      display: none;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: center;
+    }
+    .countdown-text span { color: #25D366; font-weight: 700; }
+    .btn-cancel {
+      display: none;
+      background: none;
+      border: 1px solid #444;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: 6px;
+      width: 100%;
+    }
+    .btn-cancel:hover { border-color: var(--red); color: var(--red); }
+
     .group-label {
       font-size: 11px;
       font-weight: 700;
@@ -112,9 +133,8 @@
       color: var(--muted);
       width: 100%;
       max-width: 420px;
-      margin: 8px 0 4px;
+      margin: 10px 0 4px;
     }
-
     .btn {
       display: flex;
       align-items: center;
@@ -135,17 +155,14 @@
     }
     .btn:active { opacity: .85; transform: scale(.98); }
     .btn[disabled] { opacity: .35; pointer-events: none; }
-
-    .btn-call  { background: var(--red);    font-size: 19px; }
-    .btn-call2 { background: #B5202C;       font-size: 19px; }
+    .btn-call  { background: var(--red);  font-size: 19px; }
+    .btn-call2 { background: #B5202C;     font-size: 19px; }
     .btn-wa    { background: #25D366; }
     .btn-wa2   { background: #1DA851; }
     .btn-sms   { background: #2A2A2A; border: 1px solid #3a3a3a; }
     .btn-sms2  { background: #2A2A2A; border: 1px solid #555; }
     .btn-maps  { background: #1A73E8; }
-
     .icon { font-size: 22px; line-height: 1; }
-
     .note {
       font-size: 12px;
       color: var(--muted);
@@ -169,22 +186,25 @@
       <span class="status-label" id="status-label">Ricerca posizione GPS&hellip;</span>
     </div>
     <div class="coords" id="coords"></div>
+    <div class="countdown-bar" id="cd-bar"><div class="countdown-bar-fill" id="cd-fill"></div></div>
+    <div class="countdown-text" id="cd-text">WhatsApp si apre in <span id="cd-num">5</span>s &mdash; oppure usa i pulsanti</div>
+    <button class="btn-cancel" id="btn-cancel" onclick="cancelAuto()">&#10005; Annulla apertura automatica</button>
   </div>
 
   <!-- GENITORE 1 -->
-  <div class="group-label" id="label-g1">&#128222; Genitore 1</div>
+  <div class="group-label" id="label-g1">Genitore 1</div>
   <a class="btn btn-call"  id="btn-call"  href="#">&#128222; <span id="lbl-call">Chiama</span></a>
   <a class="btn btn-wa"    id="btn-wa"    href="#" disabled>&#128172; <span id="lbl-wa">WhatsApp</span></a>
   <a class="btn btn-sms"   id="btn-sms"   href="#" disabled>&#9993;&#65039; <span id="lbl-sms">SMS</span></a>
 
   <!-- GENITORE 2 -->
-  <div class="group-label" id="label-g2" style="margin-top:12px;">&#128222; Genitore 2</div>
+  <div class="group-label" id="label-g2" style="margin-top:10px;">Genitore 2</div>
   <a class="btn btn-call2" id="btn-call2" href="#">&#128222; <span id="lbl-call2">Chiama</span></a>
   <a class="btn btn-wa2"   id="btn-wa2"   href="#" disabled>&#128172; <span id="lbl-wa2">WhatsApp</span></a>
   <a class="btn btn-sms2"  id="btn-sms2"  href="#" disabled>&#9993;&#65039; <span id="lbl-sms2">SMS</span></a>
 
   <!-- MAPS -->
-  <a class="btn btn-maps" id="btn-maps" href="#" target="_blank" disabled style="margin-top:12px;">
+  <a class="btn btn-maps" id="btn-maps" href="#" target="_blank" disabled style="margin-top:10px;">
     &#128205; Apri posizione su Maps
   </a>
 
@@ -198,49 +218,92 @@
   //   CONFIGURA QUI I TUOI DATI
   // ==============================================
 
-  const NUMERO_GENITORE  = "+393469440430";  // es. +393331234567
-  const WHATSAPP_NUMERO  = "393469440430";   // stesso numero senza il +
-  const RUOLO_GENITORE   = "mamma";          // scrivi: mamma  oppure  papa'
-  const NOME_GENITORE    = "Isabella";       // nome genitore 1
+  var NUMERO_GENITORE  = "+393469440430";  // es. +393331234567
+  var WHATSAPP_NUMERO  = "393469440430";   // stesso numero senza il +
+  var RUOLO_GENITORE   = "mamma";          // scrivi: mamma  oppure  papa
+  var NOME_GENITORE    = "Isabella";       // nome genitore 1
 
-  const NUMERO_GENITORE2 = "+393493766793";  // es. +393337654321
-  const WHATSAPP_NUMERO2 = "393493766793";   // stesso numero senza il +
-  const RUOLO_GENITORE2  = "papa'";          // scrivi: papa'  oppure  mamma
-  const NOME_GENITORE2   = "Simone";         // nome genitore 2
+  var NUMERO_GENITORE2 = "+393493766793";  // es. +393337654321
+  var WHATSAPP_NUMERO2 = "393493766793";   // stesso numero senza il +
+  var RUOLO_GENITORE2  = "papa";           // scrivi: papa  oppure  mamma
+  var NOME_GENITORE2   = "Simone";         // nome genitore 2
 
-  const NOME_BAMBINO     = "Cecilia";          // nome tua figlia
+  var NOME_BAMBINO     = "Cecilia";        // nome tua figlia
+
+  var AUTO_SECONDI     = 5;               // secondi prima di aprire WhatsApp automaticamente (0 = disattiva)
 
   // ==============================================
 
-  // Etichette gruppi
-  document.getElementById("label-g1").textContent =
-    RUOLO_GENITORE.charAt(0).toUpperCase() + RUOLO_GENITORE.slice(1) + " " + NOME_GENITORE;
-  document.getElementById("label-g2").textContent =
-    RUOLO_GENITORE2.charAt(0).toUpperCase() + RUOLO_GENITORE2.slice(1) + " " + NOME_GENITORE2;
+  // Etichette
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  document.getElementById("label-g1").textContent    = cap(RUOLO_GENITORE)  + " " + NOME_GENITORE;
+  document.getElementById("label-g2").textContent    = cap(RUOLO_GENITORE2) + " " + NOME_GENITORE2;
+  document.getElementById("lbl-call").textContent    = "Chiama " + RUOLO_GENITORE  + " " + NOME_GENITORE;
+  document.getElementById("lbl-wa").textContent      = "WhatsApp " + RUOLO_GENITORE  + " " + NOME_GENITORE;
+  document.getElementById("lbl-sms").textContent     = "SMS " + RUOLO_GENITORE  + " " + NOME_GENITORE;
+  document.getElementById("lbl-call2").textContent   = "Chiama " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+  document.getElementById("lbl-wa2").textContent     = "WhatsApp " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+  document.getElementById("lbl-sms2").textContent    = "SMS " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
 
-  // Etichette pulsanti
-  document.getElementById("lbl-call").textContent  = "Chiama " + RUOLO_GENITORE + " " + NOME_GENITORE;
-  document.getElementById("lbl-wa").textContent    = "WhatsApp " + RUOLO_GENITORE + " " + NOME_GENITORE;
-  document.getElementById("lbl-sms").textContent   = "SMS " + RUOLO_GENITORE + " " + NOME_GENITORE;
-  document.getElementById("lbl-call2").textContent = "Chiama " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
-  document.getElementById("lbl-wa2").textContent   = "WhatsApp " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
-  document.getElementById("lbl-sms2").textContent  = "SMS " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+  var elDot    = document.getElementById("dot");
+  var elLabel  = document.getElementById("status-label");
+  var elCoords = document.getElementById("coords");
+  var btnCall  = document.getElementById("btn-call");
+  var btnCall2 = document.getElementById("btn-call2");
+  var btnWa    = document.getElementById("btn-wa");
+  var btnWa2   = document.getElementById("btn-wa2");
+  var btnSms   = document.getElementById("btn-sms");
+  var btnSms2  = document.getElementById("btn-sms2");
+  var btnMaps  = document.getElementById("btn-maps");
+  var cdBar    = document.getElementById("cd-bar");
+  var cdFill   = document.getElementById("cd-fill");
+  var cdText   = document.getElementById("cd-text");
+  var cdNum    = document.getElementById("cd-num");
+  var btnCancel= document.getElementById("btn-cancel");
 
-  // Riferimenti DOM
-  const elDot    = document.getElementById("dot");
-  const elLabel  = document.getElementById("status-label");
-  const elCoords = document.getElementById("coords");
-  const btnCall  = document.getElementById("btn-call");
-  const btnCall2 = document.getElementById("btn-call2");
-  const btnWa    = document.getElementById("btn-wa");
-  const btnWa2   = document.getElementById("btn-wa2");
-  const btnSms   = document.getElementById("btn-sms");
-  const btnSms2  = document.getElementById("btn-sms2");
-  const btnMaps  = document.getElementById("btn-maps");
-
-  // Chiamate sempre disponibili
   btnCall.href  = "tel:" + NUMERO_GENITORE;
   btnCall2.href = "tel:" + NUMERO_GENITORE2;
+
+  var autoTimer = null;
+  var cancelled = false;
+
+  function cancelAuto() {
+    cancelled = true;
+    clearInterval(autoTimer);
+    cdBar.style.display    = "none";
+    cdText.style.display   = "none";
+    btnCancel.style.display= "none";
+  }
+
+  function startCountdown(waUrl) {
+    if (AUTO_SECONDI <= 0 || cancelled) return;
+    var sec = AUTO_SECONDI;
+    cdNum.textContent = sec;
+    cdBar.style.display    = "block";
+    cdText.style.display   = "block";
+    btnCancel.style.display= "block";
+
+    // Avvia barra
+    setTimeout(function() {
+      cdFill.style.width = "0%";
+      cdFill.style.transition = "width " + AUTO_SECONDI + "s linear";
+    }, 50);
+
+    autoTimer = setInterval(function() {
+      sec--;
+      cdNum.textContent = sec;
+      if (sec <= 0) {
+        clearInterval(autoTimer);
+        if (!cancelled) {
+          // Apri WhatsApp in nuova tab cosi' la pagina rimane visibile
+          window.open(waUrl, "_blank");
+          cdText.innerHTML = "&#10003; WhatsApp aperto &mdash; la pagina rimane qui";
+          cdBar.style.display    = "none";
+          btnCancel.style.display= "none";
+        }
+      }
+    }, 1000);
+  }
 
   function buildMsg(extra) {
     return encodeURIComponent("SOS! Ho trovato " + NOME_BAMBINO + ". " + extra);
@@ -260,7 +323,9 @@
   function setError(msg) {
     elDot.className     = "dot err";
     elLabel.textContent = msg;
-    enableButtons(buildMsg("Non riesco a ottenere la posizione GPS. Chiama subito!"));
+    var body = buildMsg("Non riesco a ottenere la posizione GPS. Chiama subito!");
+    enableButtons(body);
+    startCountdown("https://wa.me/" + WHATSAPP_NUMERO + "?text=" + body);
   }
 
   function setOk(lat, lon) {
@@ -269,28 +334,24 @@
     elCoords.style.display = "block";
     elCoords.textContent   = lat.toFixed(6) + ", " + lon.toFixed(6);
 
-    const mapsUrl = "https://maps.google.com/?q=" + lat + "," + lon;
-    btnMaps.href  = mapsUrl;
+    var mapsUrl = "https://maps.google.com/?q=" + lat + "," + lon;
+    btnMaps.href = mapsUrl;
     btnMaps.removeAttribute("disabled");
 
-    enableButtons(buildMsg("E' qui: " + mapsUrl));
+    var body = buildMsg("E' qui: " + mapsUrl);
+    enableButtons(body);
 
-    // Auto-apri WhatsApp genitore 1 dopo 1.5s
-    setTimeout(function() { window.location.href = btnWa.href; }, 1500);
+    var waUrl = "https://wa.me/" + WHATSAPP_NUMERO + "?text=" + body;
+    startCountdown(waUrl);
   }
 
-  // Richiedi GPS
   if (!navigator.geolocation) {
     setError("GPS non supportato su questo dispositivo");
   } else {
     navigator.geolocation.getCurrentPosition(
       function(pos) { setOk(pos.coords.latitude, pos.coords.longitude); },
       function(err) {
-        var msgs = {
-          1: "Permesso GPS negato - usa i pulsanti sotto",
-          2: "Posizione non disponibile",
-          3: "Timeout GPS - usa i pulsanti sotto"
-        };
+        var msgs = { 1: "Permesso GPS negato - usa i pulsanti", 2: "Posizione non disponibile", 3: "Timeout GPS - usa i pulsanti" };
         setError(msgs[err.code] || "Errore GPS");
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
