@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🆘 SOS – Aiuta questo bambino</title>
+  <title>SOS - Aiuta questo bambino</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,7 +29,6 @@
       padding: 24px 16px 40px;
     }
 
-    /* ── Header ── */
     .sos-badge {
       background: var(--red);
       color: #fff;
@@ -59,7 +58,6 @@
       margin-bottom: 32px;
     }
 
-    /* ── Status card ── */
     .card {
       background: var(--card);
       border: 1px solid #2a2a2a;
@@ -92,10 +90,7 @@
       50%      { opacity: 0.3; }
     }
 
-    .status-label {
-      font-size: 15px;
-      font-weight: 600;
-    }
+    .status-label { font-size: 15px; font-weight: 600; }
 
     .coords {
       font-family: 'Courier New', monospace;
@@ -108,7 +103,18 @@
       display: none;
     }
 
-    /* ── Buttons ── */
+    /* Separatore gruppo */
+    .group-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: 100%;
+      max-width: 420px;
+      margin: 8px 0 4px;
+    }
+
     .btn {
       display: flex;
       align-items: center;
@@ -123,169 +129,154 @@
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       transition: opacity .15s, transform .1s;
+      color: #fff;
     }
     .btn:active { opacity: .85; transform: scale(.98); }
-    .btn:disabled { opacity: .35; pointer-events: none; }
+    .btn[disabled] { opacity: .35; pointer-events: none; }
 
-    .btn-call {
-      background: var(--red);
-      color: #fff;
-      font-size: 19px;
-    }
-    .btn-wa {
-      background: #25D366;
-      color: #fff;
-    }
-    .btn-sms {
-      background: #2A2A2A;
-      color: var(--white);
-      border: 1px solid #3a3a3a;
-    }
-    .btn-maps {
-      background: #1A73E8;
-      color: #fff;
-    }
+    .btn-call  { background: var(--red);    font-size: 19px; }
+    .btn-call2 { background: #B5202C;       font-size: 19px; }
+    .btn-wa    { background: #25D366; }
+    .btn-wa2   { background: #1DA851; }
+    .btn-sms   { background: #2A2A2A; border: 1px solid #3a3a3a; }
+    .btn-sms2  { background: #2A2A2A; border: 1px solid #555; }
+    .btn-maps  { background: #1A73E8; }
 
     .icon { font-size: 22px; line-height: 1; }
 
-    /* ── Footer note ── */
     .note {
       font-size: 12px;
       color: var(--muted);
       text-align: center;
       max-width: 340px;
-      margin-top: 8px;
+      margin-top: 12px;
       line-height: 1.6;
     }
-
-    /* ── Error panel ── */
-    #panel-error { display: none; }
-    #panel-ok    { display: none; }
-    #panel-wait  { display: block; }
   </style>
 </head>
 <body>
 
-  <div class="sos-badge">⚠️ SOS EMERGENZA</div>
-
+  <div class="sos-badge">&#9888;&#65039; SOS EMERGENZA</div>
   <h1>Questo bambino<br>ha bisogno di <span>aiuto</span></h1>
-  <p class="subtitle">Per favore, contatta subito il genitore</p>
+  <p class="subtitle">Per favore, contatta subito un genitore</p>
 
   <!-- STATUS CARD -->
   <div class="card">
-    <!-- WAITING -->
-    <div id="panel-wait">
-      <div class="status-row">
-        <div class="dot" id="dot"></div>
-        <span class="status-label" id="status-label">Ricerca posizione GPS…</span>
-      </div>
-      <div class="coords" id="coords"></div>
+    <div class="status-row">
+      <div class="dot" id="dot"></div>
+      <span class="status-label" id="status-label">Ricerca posizione GPS&hellip;</span>
     </div>
+    <div class="coords" id="coords"></div>
   </div>
 
-  <!-- BUTTONS (sempre visibili, si attivano quando GPS pronto) -->
-  <a class="btn btn-call" id="btn-call" href="tel:+39XXXXXXXXXX">
-    <span class="icon">📞</span> Chiama genitore 1
-  </a>
+  <!-- GENITORE 1 -->
+  <div class="group-label" id="label-g1">&#128222; Genitore 1</div>
+  <a class="btn btn-call"  id="btn-call"  href="#">&#128222; <span id="lbl-call">Chiama</span></a>
+  <a class="btn btn-wa"    id="btn-wa"    href="#" disabled>&#128172; <span id="lbl-wa">WhatsApp</span></a>
+  <a class="btn btn-sms"   id="btn-sms"   href="#" disabled>&#9993;&#65039; <span id="lbl-sms">SMS</span></a>
 
-  <a class="btn btn-call" id="btn-call2" href="tel:+39YYYYYYYYYY" style="background:#B5202C;">
-    <span class="icon">📞</span> Chiama genitore 2
-  </a>
+  <!-- GENITORE 2 -->
+  <div class="group-label" id="label-g2" style="margin-top:12px;">&#128222; Genitore 2</div>
+  <a class="btn btn-call2" id="btn-call2" href="#">&#128222; <span id="lbl-call2">Chiama</span></a>
+  <a class="btn btn-wa2"   id="btn-wa2"   href="#" disabled>&#128172; <span id="lbl-wa2">WhatsApp</span></a>
+  <a class="btn btn-sms2"  id="btn-sms2"  href="#" disabled>&#9993;&#65039; <span id="lbl-sms2">SMS</span></a>
 
-  <a class="btn btn-wa" id="btn-wa" href="#" disabled>
-    <span class="icon">💬</span> WhatsApp genitore 1
-  </a>
-
-  <a class="btn btn-wa" id="btn-wa2" href="#" disabled style="background:#1DA851;">
-    <span class="icon">💬</span> WhatsApp genitore 2
-  </a>
-
-  <a class="btn btn-sms" id="btn-sms" href="#" disabled>
-    <span class="icon">✉️</span> SMS genitore 1
-  </a>
-
-  <a class="btn btn-sms" id="btn-sms2" href="#" disabled style="border-color:#555;">
-    <span class="icon">✉️</span> SMS genitore 2
-  </a>
-
-  <a class="btn btn-maps" id="btn-maps" href="#" target="_blank" disabled>
-    <span class="icon">📍</span> Apri posizione su Maps
+  <!-- MAPS -->
+  <a class="btn btn-maps" id="btn-maps" href="#" target="_blank" disabled style="margin-top:12px;">
+    &#128205; Apri posizione su Maps
   </a>
 
   <p class="note">
-    Questa pagina è collegata allo zaino/indumento di un bambino.<br>
-    La posizione GPS non viene salvata né condivisa con terzi.
+    Questa pagina e' collegata allo zaino/indumento di un bambino.<br>
+    La posizione GPS non viene salvata ne' condivisa con terzi.
   </p>
 
 <script>
-  // ╔══════════════════════════════════════════╗
-  // ║  CONFIGURA QUI I TUOI DATI               ║
-  // ╚══════════════════════════════════════════╝
-  const NUMERO_GENITORE   = "+393469440430";   // es. +393331234567  (mamma/papà 1)
-  const WHATSAPP_NUMERO   = "393469440430";    // stesso senza +
-  const NUMERO_GENITORE2  = "+393493766793";   // es. +393337654321  (mamma/papà 2)
-  const WHATSAPP_NUMERO2  = "393493766793";    // stesso senza +
-  const NOME_BAMBINO      = "Cecilia";            // nome tua figlia
+  // ==============================================
+  //   CONFIGURA QUI I TUOI DATI
+  // ==============================================
 
-  // ────────────────────────────────────────────
+  const NUMERO_GENITORE  = "+393469440430";  // es. +393331234567
+  const WHATSAPP_NUMERO  = "393469440430";   // stesso numero senza il +
+  const RUOLO_GENITORE   = "mamma";          // scrivi: mamma  oppure  papa'
+  const NOME_GENITORE    = "Isabella";       // nome genitore 1
+
+  const NUMERO_GENITORE2 = "+393493766793";  // es. +393337654321
+  const WHATSAPP_NUMERO2 = "393493766793";   // stesso numero senza il +
+  const RUOLO_GENITORE2  = "papa'";          // scrivi: papa'  oppure  mamma
+  const NOME_GENITORE2   = "Simone";         // nome genitore 2
+
+  const NOME_BAMBINO     = "Cecilia";          // nome tua figlia
+
+  // ==============================================
+
+  // Etichette gruppi
+  document.getElementById("label-g1").textContent =
+    RUOLO_GENITORE.charAt(0).toUpperCase() + RUOLO_GENITORE.slice(1) + " " + NOME_GENITORE;
+  document.getElementById("label-g2").textContent =
+    RUOLO_GENITORE2.charAt(0).toUpperCase() + RUOLO_GENITORE2.slice(1) + " " + NOME_GENITORE2;
+
+  // Etichette pulsanti
+  document.getElementById("lbl-call").textContent  = "Chiama " + RUOLO_GENITORE + " " + NOME_GENITORE;
+  document.getElementById("lbl-wa").textContent    = "WhatsApp " + RUOLO_GENITORE + " " + NOME_GENITORE;
+  document.getElementById("lbl-sms").textContent   = "SMS " + RUOLO_GENITORE + " " + NOME_GENITORE;
+  document.getElementById("lbl-call2").textContent = "Chiama " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+  document.getElementById("lbl-wa2").textContent   = "WhatsApp " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+  document.getElementById("lbl-sms2").textContent  = "SMS " + RUOLO_GENITORE2 + " " + NOME_GENITORE2;
+
+  // Riferimenti DOM
   const elDot    = document.getElementById("dot");
   const elLabel  = document.getElementById("status-label");
   const elCoords = document.getElementById("coords");
+  const btnCall  = document.getElementById("btn-call");
+  const btnCall2 = document.getElementById("btn-call2");
   const btnWa    = document.getElementById("btn-wa");
   const btnWa2   = document.getElementById("btn-wa2");
   const btnSms   = document.getElementById("btn-sms");
   const btnSms2  = document.getElementById("btn-sms2");
   const btnMaps  = document.getElementById("btn-maps");
-  const btnCall  = document.getElementById("btn-call");
-  const btnCall2 = document.getElementById("btn-call2");
 
   // Chiamate sempre disponibili
-  btnCall.href  = `tel:${NUMERO_GENITORE}`;
-  btnCall2.href = `tel:${NUMERO_GENITORE2}`;
+  btnCall.href  = "tel:" + NUMERO_GENITORE;
+  btnCall2.href = "tel:" + NUMERO_GENITORE2;
 
-  function setError(msg) {
-    elDot.className     = "dot err";
-    elLabel.textContent = msg;
-    const msgNoGps = encodeURIComponent(
-      `🆘 SOS! Ho trovato ${NOME_BAMBINO} ma non riesco a ottenere la posizione GPS. Chiama subito!`
-    );
-    btnWa.href   = `https://wa.me/${WHATSAPP_NUMERO}?text=${msgNoGps}`;
-    btnWa2.href  = `https://wa.me/${WHATSAPP_NUMERO2}?text=${msgNoGps}`;
-    btnSms.href  = `sms:${NUMERO_GENITORE}?body=${msgNoGps}`;
-    btnSms2.href = `sms:${NUMERO_GENITORE2}?body=${msgNoGps}`;
+  function buildMsg(extra) {
+    return encodeURIComponent("SOS! Ho trovato " + NOME_BAMBINO + ". " + extra);
+  }
+
+  function enableButtons(msgBody) {
+    btnWa.href   = "https://wa.me/" + WHATSAPP_NUMERO  + "?text=" + msgBody;
+    btnWa2.href  = "https://wa.me/" + WHATSAPP_NUMERO2 + "?text=" + msgBody;
+    btnSms.href  = "sms:" + NUMERO_GENITORE  + "?body=" + msgBody;
+    btnSms2.href = "sms:" + NUMERO_GENITORE2 + "?body=" + msgBody;
     btnWa.removeAttribute("disabled");
     btnWa2.removeAttribute("disabled");
     btnSms.removeAttribute("disabled");
     btnSms2.removeAttribute("disabled");
   }
 
+  function setError(msg) {
+    elDot.className     = "dot err";
+    elLabel.textContent = msg;
+    enableButtons(buildMsg("Non riesco a ottenere la posizione GPS. Chiama subito!"));
+  }
+
   function setOk(lat, lon) {
-    elDot.className     = "dot ok";
-    elLabel.textContent = "Posizione trovata ✓";
+    elDot.className        = "dot ok";
+    elLabel.textContent    = "Posizione trovata";
     elCoords.style.display = "block";
-    elCoords.textContent   = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+    elCoords.textContent   = lat.toFixed(6) + ", " + lon.toFixed(6);
 
-    const mapsUrl = `https://maps.google.com/?q=${lat},${lon}`;
-    const msg = encodeURIComponent(
-      `🆘 SOS! Ho trovato ${NOME_BAMBINO}. È qui: ${mapsUrl}`
-    );
-
-    btnWa.href   = `https://wa.me/${WHATSAPP_NUMERO}?text=${msg}`;
-    btnWa2.href  = `https://wa.me/${WHATSAPP_NUMERO2}?text=${msg}`;
-    btnSms.href  = `sms:${NUMERO_GENITORE}?body=${msg}`;
-    btnSms2.href = `sms:${NUMERO_GENITORE2}?body=${msg}`;
-    btnMaps.href = mapsUrl;
-
-    btnWa.removeAttribute("disabled");
-    btnWa2.removeAttribute("disabled");
-    btnSms.removeAttribute("disabled");
-    btnSms2.removeAttribute("disabled");
+    const mapsUrl = "https://maps.google.com/?q=" + lat + "," + lon;
+    btnMaps.href  = mapsUrl;
     btnMaps.removeAttribute("disabled");
 
+    enableButtons(buildMsg("E' qui: " + mapsUrl));
+
     // Auto-apri WhatsApp genitore 1 dopo 1.5s
-    setTimeout(() => { window.location.href = btnWa.href; }, 1500);
+    setTimeout(function() { window.location.href = btnWa.href; }, 1500);
   }
 
   // Richiedi GPS
@@ -293,12 +284,12 @@
     setError("GPS non supportato su questo dispositivo");
   } else {
     navigator.geolocation.getCurrentPosition(
-      pos => setOk(pos.coords.latitude, pos.coords.longitude),
-      err => {
-        const msgs = {
-          1: "Permesso GPS negato – usa i pulsanti sotto",
+      function(pos) { setOk(pos.coords.latitude, pos.coords.longitude); },
+      function(err) {
+        var msgs = {
+          1: "Permesso GPS negato - usa i pulsanti sotto",
           2: "Posizione non disponibile",
-          3: "Timeout GPS – usa i pulsanti sotto"
+          3: "Timeout GPS - usa i pulsanti sotto"
         };
         setError(msgs[err.code] || "Errore GPS");
       },
