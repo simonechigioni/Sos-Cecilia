@@ -87,8 +87,6 @@
       margin-top: 6px;
       display: none;
     }
-
-    /* Conto alla rovescia */
     .countdown-bar {
       display: none;
       margin-top: 12px;
@@ -124,7 +122,6 @@
       width: 100%;
     }
     .btn-cancel:hover { border-color: var(--red); color: var(--red); }
-
     .group-label {
       font-size: 11px;
       font-weight: 700;
@@ -187,7 +184,7 @@
     </div>
     <div class="coords" id="coords"></div>
     <div class="countdown-bar" id="cd-bar"><div class="countdown-bar-fill" id="cd-fill"></div></div>
-    <div class="countdown-text" id="cd-text">WhatsApp si apre in <span id="cd-num">5</span>s &mdash; oppure usa i pulsanti</div>
+    <div class="countdown-text" id="cd-text">WhatsApp si apre tra <span id="cd-num">5</span>s &mdash; oppure usa i pulsanti</div>
     <button class="btn-cancel" id="btn-cancel" onclick="cancelAuto()">&#10005; Annulla apertura automatica</button>
   </div>
 
@@ -209,8 +206,8 @@
   </a>
 
   <p class="note">
-    Questa pagina e' collegata allo zaino/indumento di un bambino.<br>
-    La posizione GPS non viene salvata ne' condivisa con terzi.
+    Questa pagina &egrave; collegata allo zaino o all&rsquo;indumento di un bambino.<br>
+    La posizione GPS non viene salvata n&eacute; condivisa con terzi.
   </p>
 
 <script>
@@ -218,23 +215,22 @@
   //   CONFIGURA QUI I TUOI DATI
   // ==============================================
 
-  var NUMERO_GENITORE  = "+393469440430";  // es. +393331234567
-  var WHATSAPP_NUMERO  = "393469440430";   // stesso numero senza il +
-  var RUOLO_GENITORE   = "mamma";          // scrivi: mamma  oppure  papa
-  var NOME_GENITORE    = "Isabella";       // nome genitore 1
+  var NUMERO_GENITORE  = "+393469440430";
+  var WHATSAPP_NUMERO  = "393469440430";
+  var RUOLO_GENITORE   = "mamma";
+  var NOME_GENITORE    = "Isabella";
 
-  var NUMERO_GENITORE2 = "+393493766793";  // es. +393337654321
-  var WHATSAPP_NUMERO2 = "393493766793";   // stesso numero senza il +
-  var RUOLO_GENITORE2  = "papa";           // scrivi: papa  oppure  mamma
-  var NOME_GENITORE2   = "Simone";         // nome genitore 2
+  var NUMERO_GENITORE2 = "+393493766793";
+  var WHATSAPP_NUMERO2 = "393493766793";
+  var RUOLO_GENITORE2  = "pap\u00e0";
+  var NOME_GENITORE2   = "Simone";
 
-  var NOME_BAMBINO     = "Cecilia";        // nome tua figlia
+  var NOME_BAMBINO     = "Cecilia";
 
-  var AUTO_SECONDI     = 5;               // secondi prima di aprire WhatsApp automaticamente (0 = disattiva)
+  var AUTO_SECONDI     = 5;
 
   // ==============================================
 
-  // Etichette
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   document.getElementById("label-g1").textContent    = cap(RUOLO_GENITORE)  + " " + NOME_GENITORE;
   document.getElementById("label-g2").textContent    = cap(RUOLO_GENITORE2) + " " + NOME_GENITORE2;
@@ -270,22 +266,21 @@
   function cancelAuto() {
     cancelled = true;
     clearInterval(autoTimer);
-    cdBar.style.display    = "none";
-    cdText.style.display   = "none";
-    btnCancel.style.display= "none";
+    cdBar.style.display     = "none";
+    cdText.style.display    = "none";
+    btnCancel.style.display = "none";
   }
 
   function startCountdown(waUrl) {
     if (AUTO_SECONDI <= 0 || cancelled) return;
     var sec = AUTO_SECONDI;
-    cdNum.textContent = sec;
-    cdBar.style.display    = "block";
-    cdText.style.display   = "block";
-    btnCancel.style.display= "block";
+    cdNum.textContent       = sec;
+    cdBar.style.display     = "block";
+    cdText.style.display    = "block";
+    btnCancel.style.display = "block";
 
-    // Avvia barra
     setTimeout(function() {
-      cdFill.style.width = "0%";
+      cdFill.style.width      = "0%";
       cdFill.style.transition = "width " + AUTO_SECONDI + "s linear";
     }, 50);
 
@@ -295,11 +290,10 @@
       if (sec <= 0) {
         clearInterval(autoTimer);
         if (!cancelled) {
-          // Apri WhatsApp in nuova tab cosi' la pagina rimane visibile
           window.open(waUrl, "_blank");
-          cdText.innerHTML = "&#10003; WhatsApp aperto &mdash; la pagina rimane qui";
-          cdBar.style.display    = "none";
-          btnCancel.style.display= "none";
+          cdText.innerHTML        = "&#10003; WhatsApp aperto &mdash; la pagina rimane qui";
+          cdBar.style.display     = "none";
+          btnCancel.style.display = "none";
         }
       }
     }, 1000);
@@ -338,11 +332,10 @@
     btnMaps.href = mapsUrl;
     btnMaps.removeAttribute("disabled");
 
-    var body = buildMsg("E' qui: " + mapsUrl);
+    var body = buildMsg("\u00c8 qui: " + mapsUrl);
     enableButtons(body);
 
-    var waUrl = "https://wa.me/" + WHATSAPP_NUMERO + "?text=" + body;
-    startCountdown(waUrl);
+    startCountdown("https://wa.me/" + WHATSAPP_NUMERO + "?text=" + body);
   }
 
   if (!navigator.geolocation) {
@@ -351,7 +344,11 @@
     navigator.geolocation.getCurrentPosition(
       function(pos) { setOk(pos.coords.latitude, pos.coords.longitude); },
       function(err) {
-        var msgs = { 1: "Permesso GPS negato - usa i pulsanti", 2: "Posizione non disponibile", 3: "Timeout GPS - usa i pulsanti" };
+        var msgs = {
+          1: "Permesso GPS negato \u2014 usa i pulsanti",
+          2: "Posizione non disponibile",
+          3: "Timeout GPS \u2014 usa i pulsanti"
+        };
         setError(msgs[err.code] || "Errore GPS");
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
