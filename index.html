@@ -149,7 +149,7 @@
   var NUMERO_GENITORE  = "+393469440430";
   var WHATSAPP_NUMERO  = "393469440430";
   var RUOLO_GENITORE   = "mamma";
-  var NOME_GENITORE    = "Isabella";
+  var NOME_GENITORE    = "ISabella";
   var NUMERO_GENITORE2 = "+393493766793";
   var WHATSAPP_NUMERO2 = "393493766793";
   var RUOLO_GENITORE2  = "papà";
@@ -194,7 +194,7 @@
     setTimeout(function(){cdFill.style.width="0%";cdFill.style.transition="width "+AUTO_SECONDI+"s linear";},50);
     autoTimer=setInterval(function(){
       sec--; cdNum.textContent=sec;
-      if(sec<=0){clearInterval(autoTimer);if(!cancelled){var fr=document.createElement("iframe");fr.style.display="none";fr.src=waUrl;document.body.appendChild(fr);setTimeout(function(){document.body.removeChild(fr);},3000);cdText.innerHTML="&#10003; WhatsApp aperto &mdash; la pagina rimane qui";cdBar.style.display=btnCancel.style.display="none";}}
+      if(sec<=0){clearInterval(autoTimer);if(!cancelled){cdText.innerHTML="&#10003; WhatsApp aperto &mdash; premi INDIETRO per tornare";cdBar.style.display=btnCancel.style.display="none";setTimeout(function(){location.href=waUrl;},800);}}
     },1000);
   }
 
